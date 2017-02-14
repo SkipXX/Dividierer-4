@@ -60,3 +60,13 @@ void Snake::eat(int dx, int dy)
 	m_pos.first += dx;
 	m_pos.second += dy;
 }
+
+void Snake::set_snake_dir(eDirection dir_snake)
+{
+	snake_dir = dir_snake;
+}
+
+eDirection Snake::get_snake_dir()
+{
+	return snake_dir;
+}

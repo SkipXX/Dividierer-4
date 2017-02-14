@@ -80,7 +80,7 @@ private:
 	eDirection m_dir;
 
 	int m_immunity;
-	const int m_immunity_time = 6;
+	static constexpr int m_immunity_time = 6;
 
 	Snake m_snake;
 	GameObject m_food;
@@ -89,5 +89,9 @@ private:
 
 	bool m_music;
 	Sound Music;
+
+	static constexpr int frameDelay = 6;
+	int frameCounter = 0;
+	bool pause = false;
 	/********************************/
 };

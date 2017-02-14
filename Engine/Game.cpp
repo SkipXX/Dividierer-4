@@ -82,28 +82,44 @@ void Game::UpdateModel()
 		exit(1337);
 	}
 
+	//pause funktion
+	if (wnd.kbd.KeyIsPressed(VK_SPACE))
+	{
+		if (pause)
+		{
+			pause = false;
+		}
+		else pause = true;
+	}
+
 	//W for UP
-	if (m_dir != UP && (m_dir != DOWN || score==0) && wnd.kbd.KeyIsPressed(0x57))
+	if (m_dir != UP && ((m_dir != DOWN && m_snake.get_snake_dir() != DOWN) || score==0) && wnd.kbd.KeyIsPressed(0x57))
 	{
 		m_dir = UP;
 	}
 	//S for DOWN
-	else if (m_dir != DOWN && (m_dir != UP || score == 0) && wnd.kbd.KeyIsPressed(0x53))
+	else if (m_dir != DOWN && ((m_dir != UP && m_snake.get_snake_dir() != UP) || score == 0) && wnd.kbd.KeyIsPressed(0x53))
 	{
 		m_dir = DOWN;
 	}
 	//D for RIGHT
-	else if (m_dir != RIGHT && (m_dir != LEFT || score == 0) && wnd.kbd.KeyIsPressed(0x44))
+	else if (m_dir != RIGHT && ((m_dir != LEFT && m_snake.get_snake_dir() != LEFT) || score == 0) && wnd.kbd.KeyIsPressed(0x44))
 	{
 		m_dir = RIGHT;
 	}
 	//A for LEFT
-	else if (m_dir != LEFT && (m_dir != RIGHT || score == 0) && wnd.kbd.KeyIsPressed(0x41))
+	else if (m_dir != LEFT && ((m_dir != RIGHT && m_snake.get_snake_dir() != RIGHT) || score == 0) && wnd.kbd.KeyIsPressed(0x41))
 	{	
 		m_dir = LEFT;
 	}
 
+	//framerate handling included
+	if (frameCounter >= frameDelay && !(pause))
+	{
 	moveSnake(m_dir);
+	frameCounter = 0;
+	}
+	else frameCounter++;
 
 	//TRAP AND POWERUP SPAWN
 	/*
@@ -118,10 +134,6 @@ void Game::UpdateModel()
 		m_powerups.push_back(emptySpace());
 	}
 
-	
-
-	//Framerate handling xd
-	Sleep(100);
 }
 
 void Game::ComposeFrame()
@@ -130,7 +142,7 @@ void Game::ComposeFrame()
 	//BOARD
 	for (auto& ii : m_traps)
 	{
-		if(m_immunity == 0) drawSquare(ii.m_pos.first, ii.m_pos.second, 200, 30, 30);
+		if(m_immunity == 0) drawSquare(ii.m_pos.first, ii.m_pos.second, 200, 40, 40);
 		else if(m_immunity > m_immunity_time + 1) drawSquare(ii.m_pos.first, ii.m_pos.second, 30, 100, 100);
 		else drawSquare(ii.m_pos.first, ii.m_pos.second, 200, 100, 100);
 	}
@@ -220,6 +232,8 @@ int Game::moveSnake(eDirection dir)
 	int snake_x = m_snake.m_pos.first;
 	int snake_y = m_snake.m_pos.second;
 
+	m_snake.set_snake_dir(dir);
+
 	switch (dir)
 	{
 	case STOP:
@@ -270,53 +284,57 @@ int Game::moveSnake(eDirection dir)
 
 		m_snake.move(dx, dy);
 	}
-		//RIP RESET
-		else if (isTrap(snake_x + dx, snake_y + dy) || isTail(snake_x + dx, snake_y + dy))
-		{
-			softResetGame();
-		}
-		//UPGRADE
-		else if (isUpgrade(snake_x + dx, snake_y + dy))
-		{
-			power_UP();
+	//RIP STATES
+	else if (isTrap(snake_x + dx, snake_y + dy))
+	{
+		softResetGame();
+	}
+	else if (isTail(snake_x + dx, snake_y + dy) && m_snake.m_tail.front() != pair<int,int>(snake_x + dx, snake_y + dy))
+	{
+		softResetGame();
+	}
+	//UPGRADE
+	else if (isUpgrade(snake_x + dx, snake_y + dy))
+	{
+		power_UP();
 
-			vector<GameObject> tempv;
-			for (auto& ii : m_powerups)
+		vector<GameObject> tempv;
+		for (auto& ii : m_powerups)
+		{
+			if (ii.m_pos.first != snake_x + dx || ii.m_pos.second != snake_y + dy)
 			{
-				if (ii.m_pos.first != snake_x + dx || ii.m_pos.second != snake_y + dy)
-				{
-					tempv.push_back({ ii.m_pos.first, ii.m_pos.second });
-				}
+				tempv.push_back({ ii.m_pos.first, ii.m_pos.second });
 			}
-			m_powerups = tempv;
-			
-			m_snake.move(dx, dy);
 		}
-		//LOOPING
-		else if (snake_x + dx < 0)
-		{
-			m_snake.move(width-1, 0);
-		}
-		else if (snake_x + dx > width-1)
-		{
-			m_snake.move(-(width-1),0);
-		}
-		else if (snake_y + dy < 0)
-		{
-			m_snake.move(0,height-1);
-		}
-		else if (snake_y + dy > height -1)
-		{
-			m_snake.move(0, -(height-1));
-		}
-		//NORMAL MOVE
-		else m_snake.move(dx, dy);
+		m_powerups = tempv;
+		
+		m_snake.move(dx, dy);
+	}
+	//LOOPING
+	else if (snake_x + dx < 0)
+	{
+		m_snake.move(width-1, 0);
+	}
+	else if (snake_x + dx > width-1)
+	{
+		m_snake.move(-(width-1),0);
+	}
+	else if (snake_y + dy < 0)
+	{
+		m_snake.move(0,height-1);
+	}
+	else if (snake_y + dy > height -1)
+	{
+		m_snake.move(0, -(height-1));
+	}
+	//NORMAL MOVE
+	else m_snake.move(dx, dy);
 	
 	//reduce immunity
-		if (m_immunity > 0)
-		{
-			m_immunity--;
-		}
+	if (m_immunity > 0)
+	{
+		m_immunity--;
+	}
 
 
 	return 0;

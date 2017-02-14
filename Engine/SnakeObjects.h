@@ -6,6 +6,8 @@
 
 using namespace std;
 
+enum eDirection;
+
 class GameObject
 {
 	friend class Game;
@@ -27,6 +29,7 @@ class Snake : public GameObject
 	friend class Game;
 private:
 	vector<pair<int, int>> m_tail;
+	eDirection snake_dir;
 public:
 
 	
@@ -35,4 +38,7 @@ public:
 	void move(int dx, int dy);
 	void eat(int dx, int dy);
 	//bool isDead();
+
+	void set_snake_dir(eDirection dir_snake);
+	eDirection get_snake_dir();
 };
