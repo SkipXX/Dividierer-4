@@ -28,6 +28,8 @@
 
 int WINAPI wWinMain( HINSTANCE hInst,HINSTANCE,LPWSTR pArgs,INT )
 {
+	//meep
+
 	///seed rand()
 	srand(time(nullptr));
 	rand();
