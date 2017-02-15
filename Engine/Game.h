@@ -62,11 +62,14 @@ private:
 	bool isUpgrade(int x, int y);
 
 	pair<int, int> emptySpace();
+	pair<int, int> emptySpaceNotNearSnake();
+
 	void respawnFruit();
 	void drawSquare(int x, int y, int r, int g, int b);
 	int moveSnake(eDirection dir);
 	void softResetGame();
 	void power_UP();
+	void spawnTrap(int n);
 	/********************************/
 private:
 	MainWindow& wnd;

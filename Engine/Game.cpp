@@ -49,13 +49,26 @@ void Game::Go()
 
 void Game::UpdateModel()
 {	
-	
-	//if F is pressed
+
+	//if F is pressed (respawn Fruit)
 	if (wnd.kbd.KeyIsPressed(0x46))
 	{
 		respawnFruit();
 	}
-	//power cheat
+	//if T is pressed (spawn Trap)
+	if (wnd.kbd.KeyIsPressed(0x54))
+	{
+		spawnTrap(1);
+	}
+	//TESTING (press O)
+	if (wnd.kbd.KeyIsPressed(0x4F))
+	{
+		Sleep(500);
+
+		//m_dir = STOP;
+		//m_snake.snake_dir = STOP;
+	}
+	//if P is pressed (power cheat)
 	if (wnd.kbd.KeyIsPressed(0x50))
 	{
 		power_UP();
@@ -202,15 +215,40 @@ bool Game::isFood(int x, int y)
 
 pair<int, int> Game::emptySpace()
 {
+	//int counter = 0;
+
 	int tempx, tempy;
 	do
 	{
 		tempx = rand() % width;
 		tempy = rand() % height;
 
+		//if (counter > 100) return{0,0};
+		//counter++;
+
 	} while (isTrap(tempx, tempy) || isTail(tempx, tempy) || (tempx == m_food.m_pos.first && tempy == m_food.m_pos.second) || isUpgrade(tempx, tempy) || (tempx == m_snake.m_pos.first && tempy == m_snake.m_pos.second));
 
 	return{ tempx, tempy };
+}
+
+pair<int, int> Game::emptySpaceNotNearSnake()
+{	
+	
+	auto temp = emptySpace();
+
+	int x_buffer = 4;
+	int y_buffer = 4;
+
+	if (m_snake.snake_dir == LEFT || m_snake.snake_dir == RIGHT)	x_buffer = 5;
+	if (m_snake.snake_dir == UP	  || m_snake.snake_dir == DOWN)		y_buffer = 5;
+
+	int a = ((x_buffer > y_buffer) ? x_buffer : y_buffer);
+
+	while ((abs(temp.first - m_snake.m_pos.first) + abs(temp.second - m_snake.m_pos.second)) <= a && (abs(temp.first - m_snake.m_pos.first) < x_buffer && abs(temp.second - m_snake.m_pos.second) < y_buffer))
+	{
+		temp = emptySpace();
+	}
+	return temp;
 }
 
 void Game::respawnFruit() {
@@ -263,8 +301,8 @@ int Game::moveSnake(eDirection dir)
 			respawnFruit();
 			score++;
 
-			m_traps.push_back(emptySpace());
-			if(power > 4 || score > 18) m_traps.push_back(emptySpace());
+			if (power > 4 || score > 18) spawnTrap(2);
+			else spawnTrap(1);
 
 			//m_immunity += 3;
 		}
@@ -444,5 +482,18 @@ void Game::power_UP()
 
 	//compensate for immunity loss after moving
 	m_immunity++;
+}
+
+void Game::spawnTrap(int n=1)
+{	
+	if (n == 1)
+	{
+		m_traps.push_back(emptySpaceNotNearSnake());
+		return; //!!!!
+	}
+	for (int ii = 0; ii < n; ++ii)
+	{
+		m_traps.push_back(emptySpaceNotNearSnake());
+	}
 }
 ///

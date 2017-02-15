@@ -31,7 +31,7 @@ int WINAPI wWinMain( HINSTANCE hInst,HINSTANCE,LPWSTR pArgs,INT )
 	//meep
 
 	///seed rand()
-	srand(time(nullptr));
+	srand(static_cast<unsigned int>(time(nullptr)));
 	rand();
 	///
 
