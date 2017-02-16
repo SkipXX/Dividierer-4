@@ -83,13 +83,16 @@ private:
 
 	/********************************/
 	/*  User Variables              */
-	int width, height;
+	int width = 22, height = 22;
+	int pixel_width = gfx.ScreenWidth / width;
+	int pixel_height = gfx.ScreenHeight / height;
+
 	int score;
 	int power;
 	eDirection m_dir;
 
 	int m_immunity;
-	static constexpr int m_immunity_time = 6;
+	int m_immunity_time = 6;
 
 	Snake m_snake;
 	GameObject m_food;

@@ -31,6 +31,9 @@ Game::Game( MainWindow& wnd )
 	width = 22;
 	height = 22;
 
+	pixel_width = gfx.ScreenHeight / height;
+	pixel_height = gfx.ScreenHeight / height;
+
 	m_snake.m_pos = { width / 2, height / 2 };
 
 	softResetGame();
@@ -263,9 +266,7 @@ void Game::respawnFruit() {
 void Game::drawSquare(int x, int y, int r, int g, int b)
 {	
 	assert(x <= width && y <= height && "Error: tried to draw square outside of window!! [Game::drawSquare(...)]");
-	int temp_y{gfx.ScreenHeight/height};
-	int temp_x{gfx.ScreenWidth/width};
-	gfx.drawRect(x*temp_x, y*temp_y, temp_x, temp_y, r, g, b);
+	gfx.drawRect(x*pixel_width, y*pixel_height, pixel_width, pixel_height, r, g, b);
 }
 void Game::drawSquare(int x, int y, Color color)
 {	
@@ -273,8 +274,9 @@ void Game::drawSquare(int x, int y, Color color)
 }
 
 void Game::drawCircle(int x, int y, Color color)
-{
-	int r = gfx.ScreenHeight / height / 2;
+{	
+	assert(pixel_height == pixel_width && "[Game::drawCircle()]");
+	int r = pixel_height / 2;
 	gfx.DrawMyCircle(2*r*(x+1) - r, 2*r*(y+1)- r, r, color);
 }
 void Game::drawCircle(int x, int y, int r, int g, int b)
