@@ -21,6 +21,10 @@
 #include "MainWindow.h"
 #include "Game.h"
 
+///
+using namespace std;
+///
+
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
@@ -40,6 +44,8 @@ Game::Game( MainWindow& wnd )
 
 	m_music = true;
 	Music.Play(1.0f, 0.5f);
+
+	m_timer.Mark();
 }
 
 void Game::Go()
@@ -128,14 +134,23 @@ void Game::UpdateModel()
 	{	
 		m_dir = LEFT;
 	}
-
+	
 	//framerate handling included
+	
 	if (frameCounter >= frameDelay && !(pause))
 	{
 	moveSnake(m_dir);
 	frameCounter = 0;
 	}
 	else frameCounter++;
+	
+	/*
+	m_time += m_timer.Mark();
+	if (m_time > 0.1f)
+	{
+		moveSnake(m_dir);
+		m_time -= 0.1f;
+	}
 
 	//TRAP AND POWERUP SPAWN
 	/*

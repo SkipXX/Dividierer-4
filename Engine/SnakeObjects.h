@@ -23,7 +23,7 @@ public:
 
 
 
-
+//its a snek
 class Snake : public GameObject
 {
 	friend class Game;

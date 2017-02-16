@@ -1,6 +1,7 @@
 #include "SnakeObjects.h"
 
 
+using namespace std;
 
 //GameObject
 GameObject::GameObject(int x, int y)
@@ -20,11 +21,6 @@ void GameObject::setCoords(int x, int y)
 	m_pos.first = x;
 	m_pos.second = y;
 }
-
-
-
-
-
 
 
 

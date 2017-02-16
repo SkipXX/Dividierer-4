@@ -25,6 +25,7 @@
 #include "Graphics.h"
 
 #include "Sound.h"
+#include "FrameTimer.h"
 
 #include <vector>
 #include <cassert>
@@ -105,5 +106,8 @@ private:
 	static constexpr int frameDelay = 6;
 	int frameCounter = 0;
 	bool pause = false;
+
+	FrameTimer m_timer;
+	float m_time = 0;
 	/********************************/
 };
