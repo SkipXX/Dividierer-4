@@ -174,7 +174,10 @@ void Game::ComposeFrame()
 		drawSquare(ii.first, ii.second, 200, 200, 200);
 	}
 	 
-	drawSquare(m_snake.m_pos.first, m_snake.m_pos.second, 30, 130, 200);
+	drawSquare(m_snake.m_pos.first, m_snake.m_pos.second, Color(30, 130, 200));
+
+	//drawCircle(0,0, 30, 130, 200);
+	//drawCircle(21, 21, 30, 130, 200);
 }	
 
 
@@ -264,11 +267,15 @@ void Game::drawSquare(int x, int y, int r, int g, int b)
 	int temp_x{gfx.ScreenWidth/width};
 	gfx.drawRect(x*temp_x, y*temp_y, temp_x, temp_y, r, g, b);
 }
+void Game::drawSquare(int x, int y, Color color)
+{	
+	return drawSquare(x, y, color.GetR(), color.GetG(), color.GetB());
+}
 
-void Game::drawCircle(int x, int y, Color color = Colors::Magenta)
+void Game::drawCircle(int x, int y, Color color)
 {
 	int r = gfx.ScreenHeight / height / 2;
-	gfx.DrawCircle(2*r*(x+1) - 20, 2*r*(y+1)-20, r - 1, color);
+	gfx.DrawMyCircle(2*r*(x+1) - r, 2*r*(y+1)- r, r, color);
 }
 void Game::drawCircle(int x, int y, int r, int g, int b)
 {

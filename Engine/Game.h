@@ -65,9 +65,13 @@ private:
 	pair<int, int> emptySpaceNotNearSnake();
 
 	void respawnFruit();
+
 	void drawSquare(int x, int y, int r, int g, int b);
+	void drawSquare(int x, int y, Color color);
+
 	void drawCircle(int x, int y, Color color);
 	void drawCircle(int x, int y, int r, int g, int b);
+
 	int moveSnake(eDirection dir);
 	void softResetGame();
 	void power_UP();
