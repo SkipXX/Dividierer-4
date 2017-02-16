@@ -66,6 +66,8 @@ private:
 
 	void respawnFruit();
 	void drawSquare(int x, int y, int r, int g, int b);
+	void drawCircle(int x, int y, Color color);
+	void drawCircle(int x, int y, int r, int g, int b);
 	int moveSnake(eDirection dir);
 	void softResetGame();
 	void power_UP();

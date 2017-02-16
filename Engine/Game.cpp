@@ -167,6 +167,8 @@ void Game::ComposeFrame()
 
 	drawSquare(m_food.m_pos.first, m_food.m_pos.second, 30, 200, 30);
 
+	//drawCircle(m_food.m_pos.first, m_food.m_pos.second, 30, 200, 30);
+
 	for (auto& ii : m_snake.m_tail)
 	{
 		drawSquare(ii.first, ii.second, 200, 200, 200);
@@ -256,11 +258,21 @@ void Game::respawnFruit() {
 }
 
 void Game::drawSquare(int x, int y, int r, int g, int b)
-{
+{	
 	assert(x <= width && y <= height && "Error: tried to draw square outside of window!! [Game::drawSquare(...)]");
 	int temp_y{gfx.ScreenHeight/height};
 	int temp_x{gfx.ScreenWidth/width};
 	gfx.drawRect(x*temp_x, y*temp_y, temp_x, temp_y, r, g, b);
+}
+
+void Game::drawCircle(int x, int y, Color color = Colors::Magenta)
+{
+	int r = gfx.ScreenHeight / height / 2;
+	gfx.DrawCircle(2*r*(x+1) - 20, 2*r*(y+1)-20, r - 1, color);
+}
+void Game::drawCircle(int x, int y, int r, int g, int b)
+{
+	drawCircle(x, y, Color(r,g,b));
 }
 
 int Game::moveSnake(eDirection dir)
